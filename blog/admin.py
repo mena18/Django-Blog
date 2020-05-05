@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post,Comment
 # Register your models here.
 
 
@@ -12,3 +12,10 @@ class Post_admin(admin.ModelAdmin):
     #raw_id_fields = ('author',)
     date_hierarchy = 'publish'
     ordering = ('status', 'publish')
+
+
+@admin.register(Comment)
+class Comment_admin(admin.ModelAdmin):
+    list_display = ('name','body','post','active')
+    list_filter = ('name','body','post','active')
+    search_fields = ('post__title',)
