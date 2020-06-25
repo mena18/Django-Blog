@@ -2,10 +2,12 @@ from django.shortcuts import render,HttpResponse,get_object_or_404
 from .models import *
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailForm,CommentForm
+from .forms import EmailForm,CommentForm,SearchForm
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.db.models import Count
+from django.contrib.postgres.search import TrigramSimilarity,SearchVector, SearchQuery, SearchRank
+
 # Create your views here.
 
 
@@ -84,3 +86,21 @@ def post_share(request,post_id):
 
     context = {'form':form,'sent':sent,'post':post}
     return render(request,"blog/share.html",context)
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Post.published.filter(title__contains=query)
+
+
+    return render(request,
+                  'blog/search.html',
+                  {'form': form,
+                   'query': query,
+                   'results': results})
