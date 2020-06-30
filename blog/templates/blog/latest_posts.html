@@ -16,7 +16,7 @@
           <a href="{{ post.get_absolute_url }}">
             <h5 class="mt-0 mb-1 font-weight-bold">{{post.title}}</h5>
           </a>
-          {{ post.body|markdown|truncatewords:20 }}
+          {{ post.body|markdown|truncatewords:10 }}
         </div>
       </li>
       {% endfor %}

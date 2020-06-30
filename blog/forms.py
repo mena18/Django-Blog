@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Comment
+from .models import Comment,SubScribers
 
 class EmailForm(forms.Form):
     name = forms.CharField(max_length=30)
@@ -17,3 +17,9 @@ class CommentForm(forms.ModelForm):
 
 class SearchForm(forms.Form):
     query = forms.CharField()
+
+
+class SubsForm(forms.ModelForm):
+    class Meta:
+        model = SubScribers
+        fields = ('name','emails')

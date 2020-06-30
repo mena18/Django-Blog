@@ -69,10 +69,10 @@
           <ul class="navbar-nav nav-flex-icons">
             <li class="nav-item">
               <!--  -->
-              <form method="GET" action="{% url 'blog:post_search' %}" class="form-inline d-flex justify-content-center md-form form-sm mt-0 mb-0">
+              <form id="search_form" method="GET" action="{% url 'blog:post_search' %}" class="form-inline d-flex justify-content-center md-form form-sm mt-0 mb-0">
                 
                 <input required name='query' class="form-control form-control-sm " type="text" placeholder="Search" aria-label="Search">
-                  <i class="fas fa-search" aria-hidden="true"></i>
+                  <i onclick="search()" class="fas fa-search" aria-hidden="true"></i> 
               </form>
             </li>
             
@@ -101,6 +101,14 @@
 
 
         <div class="col-md-8 mb-4">
+          {% if messages %}
+            <!--  if message.tags   message.tags   endif  -->
+            {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
+            {% endfor %}
+            
+          {% endif %}
+
           {% block content %}
 
           {% endblock %}
@@ -171,6 +179,9 @@
 
   <script>
     new WOW().init();
+    function search(){
+      document.getElementById('search_form').submit();
+    }
   </script>
 
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post,Comment
+from .models import Post,Comment,SubScribers
 # Register your models here.
 
 
@@ -19,3 +19,11 @@ class Comment_admin(admin.ModelAdmin):
     list_display = ('name','body','post','active')
     list_filter = ('name','body','post','active')
     search_fields = ('post__title',)
+
+
+
+@admin.register(SubScribers)
+class subs_admin(admin.ModelAdmin):
+    list_display = ('name','emails')
+    list_filter = ('name','emails')
+    search_fields = ('name','emails')

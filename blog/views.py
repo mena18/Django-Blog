@@ -1,12 +1,14 @@
-from django.shortcuts import render,HttpResponse,get_object_or_404
+from django.shortcuts import render,HttpResponse,get_object_or_404,redirect
+from django.http import HttpResponseForbidden
 from .models import *
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.views.generic import ListView
-from .forms import EmailForm,CommentForm,SearchForm
+from .forms import EmailForm,CommentForm,SearchForm,SubsForm
 from django.core.mail import send_mail
 from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity,SearchVector, SearchQuery, SearchRank
+from django.contrib import messages
 
 
 
@@ -87,22 +89,28 @@ def post_share(request,post_id):
     if(request.method=="POST"):
         form = EmailForm(request.POST)
         if(form.is_valid()):
-            post_url = request.build_absolute_uri(post.get_absolute_url())
-            subject ="{} recomed you to see {}".format(form.cleaned_data['name'],post.title)
-            body = "You can Reat the Post here {}\n\n {}\n{}\n\n{}".format(post_url,form.cleaned_data['name'],form.cleaned_data['email_from'],form.cleaned_data['comment'])
-            send_mail(subject,body,'admin@gmail.com',[form.cleaned_data['email_to']])
-            sent = True
-        else:
-            print("form is not valid")
+            try:
+                post_url = request.build_absolute_uri(post.get_absolute_url())
+                subject ="{} recomed you to see {}".format(form.cleaned_data['name'],post.title)
+                body = "You can Reat the Post here {}\n\n {}\n{}\n\n{}".format(post_url,form.cleaned_data['name'],form.cleaned_data['email_from'],form.cleaned_data['comment'])
+                send_mail(subject,body,'admin@gmail.com',[form.cleaned_data['email_to']])
+                sent = True
+            except :
+                pass
 
-            
-        
 
     else:
-        form = EmailForm()
+        return HttpResponseForbidden()
 
-    context = {'form':form,'sent':sent,'post':post}
-    return render(request,"blog/share.html",context)
+    return redirect(post.get_absolute_url());
+
+                
+
+    # else:
+    #     form = EmailForm()
+
+    # context = {'form':form,'sent':sent,'post':post}
+    # return render(request,"blog/share.html",context)
 
 
 def post_search(request):
@@ -121,3 +129,13 @@ def post_search(request):
                   {'form': form,
                    'query': query,
                    'results': results})
+
+
+
+
+def add_subscriber(request):
+    if(request.method=='POST'):
+        form = SubsForm(request.POST)
+        form.save()
+        messages.success(request, 'You Subscribed Successfuly !')
+        return redirect("blog:post_list")

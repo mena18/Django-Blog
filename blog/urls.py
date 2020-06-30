@@ -14,4 +14,6 @@ urlpatterns = [
     path('share/<int:post_id>', post_share,name="post_share"),
     path('feed/',LatestPostFeed(),name='post_feed'),
     path('search/', post_list, name='post_search'),
+    path('subs/', add_subscriber, name='subs'),
+    
 ]
