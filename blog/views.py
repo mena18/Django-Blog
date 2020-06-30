@@ -8,6 +8,8 @@ from taggit.models import Tag
 from django.db.models import Count
 from django.contrib.postgres.search import TrigramSimilarity,SearchVector, SearchQuery, SearchRank
 
+
+
 # Create your views here.
 
 
@@ -61,13 +63,14 @@ def post_detail(request,year,month,day,post):
     similar_posts = Post.published.filter(tags__in=tags_id).exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags','-publish')[:4]
 
-    context={'post':post,'comments':post.comments.all(),'similar_posts':similar_posts}
+    context={'post':post,'comments':post.comments.filter(parent_comment=None),'similar_posts':similar_posts}
     if(request.method=='POST'):
         form = CommentForm(request.POST);
-        comment = form.save(commit = False)
-        comment.post = post
-        comment.save()
-        context['new_comment'] = True
+        if(form.is_valid()):
+            comment = form.save(commit = False)
+            comment.post = post
+            comment.save()
+            context['new_comment'] = True
     else:
         form = CommentForm();
 
@@ -91,6 +94,10 @@ def post_share(request,post_id):
             sent = True
         else:
             print("form is not valid")
+
+            
+        
+
     else:
         form = EmailForm()
 

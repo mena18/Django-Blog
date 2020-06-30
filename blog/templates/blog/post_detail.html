@@ -11,7 +11,27 @@
 
 
 <!--Grid column-->
+{% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <div class="alert alert-danger">
+                <strong>{{ error }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {% for error in form.non_field_errors %}
+        <div class="alert alert-danger">
+            <strong>{{ error }}</strong>
+        </div>
+    {% endfor %}
+{% endif %}
 
+{% if new_comment %}
+<div class="alert alert-success">
+  <strong>Your comment has been added.</strong>
+</div>
+
+{% endif %}
 
 <!--Featured Image-->
 <div class="card mb-4 wow fadeIn">
@@ -95,7 +115,7 @@
         alt="Generic placeholder image">
       <div class="media-body text-center text-md-left ml-md-3 ml-0">
         <h5 class="mt-0 font-weight-bold">{{ comment.name }}
-          <a href="" class="pull-right">
+          <a href="#" onclick="func({{comment.id}})" href="" class="pull-right">
             <i class="fas fa-reply"></i>
           </a>
         </h5>
@@ -103,51 +123,49 @@
           {{ comment.created }}
         </p>
         {{ comment.body|linebreaks }}
+        
 
-
-        <div class="media d-block d-md-flex mt-3">
-          <img class="d-flex mb-3 mx-auto " src="https://mdbootstrap.com/img/Photos/Avatars/img (27).jpg"
-            alt="Generic placeholder image">
-          <div class="media-body text-center text-md-left ml-md-3 ml-0">
-            <h5 class="mt-0 font-weight-bold">Tommy Smith
-              <a href="" class="pull-right">
-                <i class="fas fa-reply"></i>
-              </a>
-            </h5>
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-            laudantium, totam rem aperiam, eaque
-            ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta
-            sunt explicabo.
+        {% for s_comment in comment.sub_comments.all %}
+          <div class="media d-block d-md-flex mt-3">
+            <img class="d-flex mb-3 mx-auto " src="https://mdbootstrap.com/img/Photos/Avatars/img (27).jpg"
+              alt="Generic placeholder image">
+            <div class="media-body text-center text-md-left ml-md-3 ml-0">
+              <h5 class="mt-0 font-weight-bold">{{ s_comment.name }}
+                <!-- <a href="" class="pull-right">
+                  <i class="fas fa-reply"></i>
+                </a> -->
+              </h5>
+              {{ s_comment.body|linebreaks }}
+            </div>
           </div>
-        </div>
-
-
-
-        <div class="media d-block d-md-flex mt-3">
-          <img class="d-flex mb-3 mx-auto " src="https://mdbootstrap.com/img/Photos/Avatars/img (21).jpg"
-            alt="Generic placeholder image">
-          <div class="media-body text-center text-md-left ml-md-3 ml-0">
-            <h5 class="mt-0 font-weight-bold">Sylvester the Cat
-              <a href="" class="pull-right">
-                <i class="fas fa-reply"></i>
-              </a>
-            </h5>
-            Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit,
-            sed quia non numquam eius modi
-            tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem.
-          </div>
-        </div>
-
+        {% endfor %}
 
         <!-- Quick Reply -->
-        <div class="form-group mt-4">
-          <label for="quickReplyFormComment">Your comment</label>
-          <textarea class="form-control" id="quickReplyFormComment" rows="5"></textarea>
+        <form method="POST" class="quick_reply" id="reply_{{comment.id}}">
+          <div class="form-group mt-4">
+            {% csrf_token %}
+            
+            <input name='parent_comment' type="hidden" value="{{comment.id}}"> 
+            
 
-          <div class="text-center">
-            <button class="btn btn-info btn-sm" type="submit">Post</button>
+            <label for="">Your name</label>
+            <input required name='name' type="text" id="" class="form-control"> 
+            
+            <label for="" >Your email</label>
+            <input required type="email" name="email" class="form-control">
+
+            <label for="">Your comment</label>
+            <textarea required name='body' class="form-control" id="" rows="5"></textarea>
+            
+              
+
+            <div class="text-center">
+              <button class="btn btn-info btn-sm" type="submit">Post</button>
+            </div>
           </div>
-        </div>
+        </form>
+
+        <!-- Quick Reply -->
 
 
 
@@ -358,6 +376,29 @@
 
 <!--Grid column-->
 
+
+<script>
+  window.onload = function(){
+    divs = document.getElementsByClassName('quick_reply');
+    for(div of divs){
+      div.style.display = 'none'
+    }
+  }
+
+
+  function func(id){
+    event.preventDefault();
+    console.log(id);
+    div = document.getElementById(`reply_${id}`);
+    if(div.style.display=='none'){
+      div.style.display = 'block'
+    }else{
+      div.style.display = 'none'
+    }
+
+  }
+</script>
+
 {% endblock %}
 
 
@@ -374,6 +415,3 @@
 
 
 
-{% if new_comment %}
-<h2>Your comment has been added.</h2>
-{% endif %}

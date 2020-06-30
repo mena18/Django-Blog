@@ -21,6 +21,7 @@ class Published(models.Manager):
 
 class Post(models.Model):
     title = models.CharField(max_length=250)
+    image = models.ImageField()
     slug = models.SlugField(max_length=250,unique_for_date='publish')
     author = models.ForeignKey(User,on_delete=models.CASCADE,related_name='posts')
     body = models.TextField()
@@ -59,9 +60,29 @@ class Comment(models.Model):
     active = models.BooleanField(default=True)
     body = models.TextField()
 
+    parent_comment = models.ForeignKey('Comment',null=True,on_delete=models.CASCADE,related_name='sub_comments',blank=True)
 
     class Meta:
         ordering = ('created',)
 
     def __str__(self):
+        if(parent_comment):
+            return "Commet by {} on {}".format(self.name,self.parent_comment)    
         return "Commet by {} on {}".format(self.name,self.post)
+
+
+
+class SubScribers(models.Model):
+    emails = models.CharField(max_length=100)
+    name = models.CharField(max_length=100)
+
+
+
+
+
+
+
+
+
+
+

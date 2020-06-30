@@ -12,7 +12,7 @@ class EmailForm(forms.Form):
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('name','email','body')
+        fields = ('name','email','body','parent_comment')
 
 
 class SearchForm(forms.Form):
