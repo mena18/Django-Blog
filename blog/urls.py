@@ -13,5 +13,5 @@ urlpatterns = [
     path('<int:year>/<int:month>/<int:day>/<slug:post>', post_detail,name="post_detail"),
     path('share/<int:post_id>', post_share,name="post_share"),
     path('feed/',LatestPostFeed(),name='post_feed'),
-    path('search/', post_search, name='post_search'),
+    path('search/', post_list, name='post_search'),
 ]

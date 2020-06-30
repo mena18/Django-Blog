@@ -12,14 +12,22 @@ from django.contrib.postgres.search import TrigramSimilarity,SearchVector, Searc
 
 
 def post_list(request,tag_slug=None):
+    print("inside post_list")
     tag=None
-    if(tag_slug==None):
+    query = ""
+    posts = []
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            posts = Post.published.filter(title__contains=query)
+    elif(tag_slug==None):
         posts = Post.published.all()
     else:
         tag = get_object_or_404(Tag,slug=tag_slug)
         posts = Post.published.filter(tags__in = [tag])
 
-    paginator = Paginator(posts,2)
+    paginator = Paginator(posts,3)
     page = request.GET.get('page')
     try:
         posts = paginator.page(page)
@@ -31,6 +39,8 @@ def post_list(request,tag_slug=None):
         posts = paginator.page(paginator.num_pages)
 
     context = {'page':page,'posts':posts,'tag':tag}
+    if(query):
+        context['query'] = query
     return render(request,'blog/post_list.html',context)
 
 

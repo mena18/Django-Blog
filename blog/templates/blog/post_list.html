@@ -10,6 +10,18 @@
   <h2>Posts tagged with "{{ tag.name }}"</h2>
 {% endif %}
 
+{% if query %}
+
+<div class="mb-3">
+  <h1>Search Result for {{query}}</h1>
+  <h1>
+    {% with posts.paginator.count as total_results %}
+      Found {{ total_results }} result{{ total_results|pluralize }}
+    {% endwith %}
+  </h1>
+</div>
+
+{% endif %}
 
 {% for post in posts %}
 
@@ -30,18 +42,20 @@
       <!--Card content-->
       <div class="card-body">
         
-        {{ post.body|truncatewords:30|linebreaks }}
-
+        <!--  post.body|truncatewords:30|linebreaks  -->
+        {{ post.body|markdown }}
         <div class="pt-5 tags">
           Tags:
           {% for tag in post.tags.all %}
-          <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
-            {{ tag.name }}
-          </a>
-          {% if not forloop.last %}, {% endif %}
+
+          <a href="{% url 'blog:post_list_by_tag' tag.slug %}" style="font-size:17px;" class="badge badge-pill badge-primary ml-2">{{ tag.name }}</a>
+          
           {% endfor %}
         </div>
 
+        <div class="text-center pt-5">
+          <a href="{{post.get_absolute_url}}" style="font-size:17px;" class="badge badge-pill badge-dark ml-2">Read More</a>
+        </div>
         
         <div class="pt-3">
           <hr >
