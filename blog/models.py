@@ -115,18 +115,8 @@ class SubScribers(models.Model):
 
 
 
-# post signal when post is created 
-# create/edit/delete posts as write
-# allow user to register in the blog and only registerd users  receive messages and comment
-# compress images
-# allow edit and delete for comments and sub comments
-# allow tagging other people 
-# improve search 
-# allow search by tags
-# add about me section
-# allow replying only by clicking on a button next to a person
-# learn  to use django forms with ajax
-# learn to send data back with forms when failure happen 
+
+
 
 
 
