@@ -32,6 +32,9 @@ Features
 	- you can work with all models (Posts,comments,users,tags) in the software using Django Dashboard
 	- adding some customization to allow searching and filtering for the models
 
+
+----------------------
+
 Visuals
 -------------
 
@@ -76,6 +79,8 @@ pip install -r requirements.txt
  >- please contact me if you have problems in the Installation process  
 
 
+----------------------
+
 Usage 
 ------------
  after installing all the requirements run the app
@@ -109,6 +114,7 @@ http://127.0.0.1:8000/admin
 You can change the username and password or add new users (must be superuser to add articles)
 
 
+----------------------
 
 Future Ideas
 -------------------
@@ -135,6 +141,7 @@ Dependencies
 - django-taggit
 - Pillow
 
+----------------------
 
 License
 --------------
