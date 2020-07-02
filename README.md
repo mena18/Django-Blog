@@ -137,9 +137,17 @@ Future Ideas
 Dependencies
 -------------------
 
-- Django3
-- django-taggit
-- Pillow
+
+
+- Front End
+	- Bootstrap 4
+	- mdbootstrap
+
+
+- Back End
+	- Django3
+	- django-taggit
+	- Pillow
 
 ----------------------
 
